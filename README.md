@@ -6,5 +6,7 @@ Water Quality Explorer API Users' Guide: https://gist.github.com/canwaf/2afa25fc
   
 Public API Documentation: https://environment.data.gov.uk/water-quality-beta/api-docs
 
+The data are available under the Open Government Licence. Data should be propely attributed to the Environment Agency in any outputs (_n.b._ there is no specific attribution statement provided with the API/data).
+
 ## Author
 Francis Rowney, Westcountry Rivers Trust
