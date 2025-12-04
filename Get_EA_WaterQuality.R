@@ -9,18 +9,19 @@
 
 ## Includes a worked example with multiple determinands, and how to join the data frames
 # 0076; Temp Water; Temperature of Water
-# 0077; Cond @ 25C;Conductivity at 25 C
-# 0180; Orthophospht;	Orthophosphate, reactive as P
-# 6396; TurbidityNTU;	Turbidity
+# 0077; Cond @ 25C; Conductivity at 25 C
+# 0180; Orthophospht; Orthophosphate, reactive as P
+# 6396; TurbidityNTU; Turbidity
 
-## Last updated: 2025-12-02
+## Last updated: 2025-12-04
 ## Author: Francis Rowney
+
+
 
 # Setup -------------------------------------------------------------------
 
 ## Set your working directory
 setwd("C:/Users/...")
-
 
 ## pacman::p_load() loads packages, and also installs them if you don't have them
 if(!require(pacman)) install.packages("pacman")
@@ -37,6 +38,7 @@ pacman::p_load(
   lubridate,
   beepr
 )
+
 
 
 # Set up the function -----------------------------------------------------
