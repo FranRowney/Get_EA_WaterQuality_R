@@ -82,7 +82,7 @@ getdata_eawq <- function(area, determinand, start_date, end_date){
     # Extract content
     data_list[[i]] <- content(response, as = "text", encoding = "UTF-8")
     
-    # Add small delay to be respectful to the API
+    # Add small delay to help keep the API running smoothly
     Sys.sleep(0.5)
   }
   
