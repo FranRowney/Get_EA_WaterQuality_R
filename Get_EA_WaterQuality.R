@@ -105,7 +105,7 @@ getdata_eawq <- function(area, determinand, start_date, end_date){
 
 # Worked example ----------------------------------------------------------
 
-#### Parameters ####
+#### Parameters
 
 ### Area
 ## Two example options are given here, but there are probably more options for precannedArea. However, they are not fully documented/published.
@@ -126,7 +126,7 @@ end_date <- as.Date("2024-12-31")
 
 
 
-#### Get the data for each determinand ####
+#### Get the data for each determinand 
 
 # Temp Water; Temperature of Water
 temp <- getdata_eawq(
@@ -169,7 +169,7 @@ turb <- getdata_eawq(
 
 
 
-#### Join the data frames together and export as CSV ####
+#### Join the data frames together and export as CSV 
 
 ### Create a list of the data frames
 df_list <- list(temp, cond, phos, turb)
