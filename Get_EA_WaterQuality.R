@@ -13,7 +13,12 @@
 # 0180; Orthophospht; Orthophosphate, reactive as P
 # 6396; TurbidityNTU; Turbidity
 
-## Last updated: 2025-12-04
+## n.b. The primary example here is for downloading data at regional scales, but additional examples will be added in time, e.g. 
+# Sub-areas
+# Enviroment Agency sampling locations
+# Radius around coordinates
+
+## Last updated: 2026-01-06
 ## Author: Francis Rowney
 
 
@@ -184,3 +189,80 @@ wq_data <- lapply(df_list, function(x) {
 ### Export the dataset as a CSV
 write_csv(wq_data, "FILENAME.csv")
 
+
+
+
+# Getting data for a specific EA location ---------------------------------
+
+
+## If you want data from just one Environment Agency sampling point:
+getdata_eawq_loc <- function(location, determinand, start_date, end_date){
+  
+  # Generate sequence of month starts
+  month_starts <- seq(start_date, end_date, by = "month")
+  month_ends <- c(month_starts[-1] - 1, end_date)
+  
+  # Initialize empty list to store results
+  data_list <- list()
+  
+  # Loop through each month
+  for (i in seq_along(month_starts)) {
+    
+    # Message to let the user know what's happening
+    cat("Getting data for:", format(month_starts[i], "%Y-%m"), "\n")
+    
+    # API call
+    response <- POST(
+      "https://environment.data.gov.uk/water-quality/data/observation?",
+      query = list(
+        pointNotation = location,  
+        #precannedArea = area, 
+        determinand = determinand, 
+        dateFrom = format(month_starts[i], "%Y-%m-%d"),
+        dateTo = format(month_ends[i], "%Y-%m-%d"),
+        limit = 2500
+      ), 
+      add_headers(Accept = "text/csv")
+    )
+    
+    # Extract content
+    data_list[[i]] <- content(response, as = "text", encoding = "UTF-8")
+    
+    # Add small delay to be respectful to the API
+    Sys.sleep(0.5)
+  }
+  
+  # Combine all months into single dataframe
+  # Set everything to character to avoid binding issues related to non-numeric results (e.g. "<1"). This can be dealt with later once you've got the data. 
+  bind_rows(
+    lapply(data_list, function(x) {
+      tryCatch(
+        read.csv(text = x, colClasses = "character"), 
+        error=function(e) NULL
+      )
+    })
+  ) %>% 
+    drop_na(result) %>% # Get rid of any dodgy rows
+    mutate(phenomenonTime = as_datetime(phenomenonTime)) %>% # Convert to POSIXct
+    mutate(Date = as_date(phenomenonTime)) # Add a Date column
+}
+
+
+#### Worked example
+
+### EA sampling point
+location <- "NE-45100054"
+
+### Date range
+start_date <- as.Date("2024-01-01")
+end_date <- as.Date("2024-12-31")
+
+
+# Temp Water; Temperature of Water
+temp <- getdata_eawq_loc(
+  location=location, 
+  determinand="0076",
+  start_date=start_date, 
+  end_date=end_date
+) %>% 
+  rename(`Temp Water` = result)
